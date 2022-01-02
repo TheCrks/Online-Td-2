@@ -191,7 +191,6 @@ class KareDefence:
                 if len(game.Enemies) >= 1:
                     distanceclosest = (self.x - game.Enemies[0].getX()) ** 2 + (self.y - game.Enemies[0].getY()) ** 2
                     for i in range(0, len(game.Enemies)):
-                        print("len: ",len(game.Enemies))
                         distance1 = (self.x - game.Enemies[i].getX()) ** 2 + (self.y - game.Enemies[i].getY()) ** 2
                         if distance1 < distanceclosest:
                             distanceclosest = distance1
@@ -249,7 +248,6 @@ class UcgenDefence:
                 if len(game.Enemies) >= 1:
                     distanceclosest = (self.x - game.Enemies[0].getX()) ** 2 + (self.y - game.Enemies[0].getY()) ** 2
                     for i in range(0, len(game.Enemies)):
-                        print("len: ",len(game.Enemies))
                         distance1 = (self.x - game.Enemies[i].getX()) ** 2 + (self.y - game.Enemies[i].getY()) ** 2
                         if distance1 < distanceclosest:
                             distanceclosest = distance1
@@ -308,7 +306,6 @@ class DaireDefence:
                 if len(game.Enemies) >= 1:
                     distanceclosest = (self.x - game.Enemies[0].getX()) ** 2 + (self.y - game.Enemies[0].getY()) ** 2
                     for i in range(0, len(game.Enemies)):
-                        print("len: ", len(game.Enemies))
                         distance1 = (self.x - game.Enemies[i].getX()) ** 2 + (self.y - game.Enemies[i].getY()) ** 2
                         if distance1 < distanceclosest:
                             distanceclosest = distance1
