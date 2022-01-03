@@ -2,8 +2,6 @@ import pickle
 import socket
 from _thread import *
 
-import pygame.mouse
-
 from Game import game
 from Game import daireEnemy
 from Game import ucgenEnemy
@@ -12,9 +10,7 @@ from Game import KareDefence
 from Game import DaireDefence
 from Game import UcgenDefence
 
-
-
-server = "(your ip address here)"
+server = "10.58.7.131"
 port = 5555
 
 sockett = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -42,7 +38,7 @@ def threaded_client(connection, player, gameId):
             try:
                 dataList = data.split()
                 data = dataList[0]
-                pos = [dataList[1],dataList[2]]
+                pos = [dataList[1], dataList[2]]
             except:
                 pass
             if gameId in games:
@@ -51,32 +47,84 @@ def threaded_client(connection, player, gameId):
                     break
                 else:
                     if data == "Kare" and player == 0 and game.summonableEnemy():
-                        Enemy = kareEnemy(20*50,"Kare",302,2,(255,255,255),25,25)
-                        game.Enemies.append(Enemy)
+                        if game.player0G >= 25:
+                            Enemy = kareEnemy(20 * 50, "Kare", 302, 2, (255, 255, 255), 25, 25)
+                            game.Enemies.append(Enemy)
+                            game.player0G -= 25
                     elif data == "Ucgen" and player == 0 and game.summonableEnemy():
-                        Enemy = ucgenEnemy(10*50,"Ucgen",300,15,(255,255,255))
-                        game.Enemies.append(Enemy)
+                        if game.player0G >=15:
+                            Enemy = ucgenEnemy(10 * 45, "Ucgen", 300, 15, (255, 255, 255))
+                            game.Enemies.append(Enemy)
+                            game.player0G -= 15
                     elif data == "Daire" and player == 0 and game.summonableEnemy():
-                        Enemy = daireEnemy(15*50,"Daire",300,15,(255,255,255),12)
-                        game.Enemies.append(Enemy)
+                        if game.player0G >= 20:
+                            Enemy = daireEnemy(15 * 50, "Daire", 300, 15, (255, 255, 255), 12)
+                            game.Enemies.append(Enemy)
+                            game.player0G -= 20
+
+                    elif data == "Back":
+                        game.over = True
+                        game.manuel = True
+                        game.win = int(dataList[1])
+                        print(game.over)
+
                     elif data == "del":
                         game.Enemies.clear()
                         game.Defenders.clear()
                     if data == "KareT" or data == "DaireT" or data == "UcgenT":
-                        game.selected = True
+                        if data == "KareT" and game.player1G >=25:
+                            game.selected = True
+                        if data == "DaireT" and game.player1G >=20:
+                            game.selected = True
+                        if data == "UcgenT" and game.player1G >=15:
+                            game.selected = True
                     elif data == "KareD":
-                        Defender = KareDefence(int(pos[0]),int(pos[1]))
-                        game.Defenders.append(Defender)
-                        game.selected = False
+                        if game.player1G >=25:
+                            Defender = KareDefence(int(pos[0]), int(pos[1]))
+                            game.Defenders.append(Defender)
+                            game.selected = False
+                            game.player1G -= 25
                     elif data == "DaireD":
-                        Defender = DaireDefence(int(pos[0]),int(pos[1]))
-                        game.Defenders.append(Defender)
-                        game.selected = False
+                        if game.player1G >=20:
+                            Defender = DaireDefence(int(pos[0]), int(pos[1]))
+                            game.Defenders.append(Defender)
+                            game.selected = False
+                            game.player1G -= 20
                     elif data == "UcgenD":
-                        Defender = UcgenDefence(int(pos[0]),int(pos[1]))
-                        game.Defenders.append(Defender)
-                        game.selected = False
+                        if game.player1G >=15:
+                            Defender = UcgenDefence(int(pos[0]), int(pos[1]))
+                            game.Defenders.append(Defender)
+                            game.selected = False
+                            game.player1G -= 15
+                    elif data == "timeSec":
+                        if game.counterMin >=8 and game.counterMin <=10 and game.counterSec % 2 == 0:
+                            game.player1G += 1
+                            game.player0G += 3
+                        elif game.counterMin >=6 and game.counterMin <8 and game.counterSec % 2 == 0:
+                            game.player1G += 0
+                            game.player0G += 6
+                        elif game.counterMin >=4 and game.counterMin <6 and game.counterSec % 2 == 0:
+                            game.player1G +=0
+                            game.player0G +=9
+                        elif game.counterMin >=2 and game.counterMin< 4 and game.counterSec % 2 == 0:
+                            game.player1G +=0
+                            game.player0G +=12
+                        elif game.counterMin >=0 and game.counterMin <2 and game.counterSec % 2 == 0:
+                            game.player1G +=0
+                            game.player0G +=15
+
+                        if game.counterSec > 0:
+                            game.counterSec -= 1
+                        else:
+                            game.counterSec = 59
+                        if game.counterSec == 30 or game.counterSec == 0:
+                            game.player0H -= 1
+                    elif data == "timeMin":
+                        game.counterMin -= 1
                     else:
+                        if not game.manuel:
+                            game.gameOver()
+                            game.winner()
                         for i in game.Enemies:
                             i.damage(game)
                             i.move(game)
